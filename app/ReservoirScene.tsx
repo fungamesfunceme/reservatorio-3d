@@ -47,9 +47,7 @@ function BasinFloor(){
 function ValleyTerrain(){
  const geometry=useMemo(()=>{
   const outer=new THREE.Shape();
-  outer.moveTo(-5.7,-2.7);
-  outer.lineTo(3.95,-2.7);outer.lineTo(3.95,-1.7);outer.lineTo(2.18,-1.7);outer.lineTo(2.18,-.78);outer.lineTo(4.98,-.78);outer.lineTo(4.98,-2.7);
-  outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
+  outer.moveTo(-5.7,-2.7);outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
   const hole=new THREE.Path();
   hole.moveTo(-2.78,-2.3);hole.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);hole.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);hole.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);hole.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);hole.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);hole.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);hole.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);hole.lineTo(-2.78,-2.3);hole.closePath();
   outer.holes.push(hole);
@@ -88,7 +86,7 @@ function ReleasedRiver({level}:{level:number}){
 
 function Spillway({flowing}:{flowing:boolean}){
  const path=useMemo(()=>new THREE.CatmullRomCurve3([
-  new THREE.Vector3(2.35,1.22,.42),new THREE.Vector3(3.15,1.22,.4),new THREE.Vector3(3.88,1.2,.43),new THREE.Vector3(4.42,1.14,.72),new THREE.Vector3(4.48,1.03,1.38),new THREE.Vector3(4.47,.86,2.18),new THREE.Vector3(4.45,.68,3.08)
+  new THREE.Vector3(2.35,1.29,.42),new THREE.Vector3(3.15,1.29,.4),new THREE.Vector3(3.88,1.28,.43),new THREE.Vector3(4.42,1.27,.72),new THREE.Vector3(4.48,1.26,1.38),new THREE.Vector3(4.47,.95,2.18),new THREE.Vector3(4.45,.75,3.08)
  ]),[]);
  const channel=useMemo(()=>{
   const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
