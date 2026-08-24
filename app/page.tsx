@@ -9,13 +9,13 @@ export default function Home(){
  const stateKey=useMemo(()=>volume>VM1[month]?'normal':volume>VM2[month]?'alerta':volume>VM3[month]?'seca':'severa',[volume,month]);
  const current=states[stateKey];
  return <main className="app-shell">
-  <header className="topbar"><div><p className="eyebrow">PLANO DE GESTÃO PROATIVA DE SECAS</p><h1>Reservatório Arneiroz II</h1></div><div className="state-pill" style={{'--state':current.color} as React.CSSProperties}><span/>Estado atual: <strong>{current.label}</strong></div></header>
+  <header className="topbar"><div><p className="eyebrow">PLANO DE GESTÃO PROATIVA DE SECAS</p><h1>Reservatório</h1></div><div className="state-pill" style={{'--state':current.color} as React.CSSProperties}><span/>Estado atual: <strong>{current.label}</strong></div></header>
   <section className="workspace">
    <aside className="control-panel"><div className="panel-heading"><span className="tiny-cube"/><div><p>SIMULAÇÃO 3D</p><h2>Relógio da Seca</h2></div></div>
-    <label>Mês de referência <strong>{MONTHS[month]}</strong></label><input aria-label="Mês de referência" type="range" min="0" max="11" value={month} onChange={e=>setMonth(+e.target.value)}/><div className="month-row"><span>Jan</span><span>Jul</span><span>Dez</span></div>
     <label>Volume armazenado <strong>{volume}%</strong></label><input aria-label="Volume armazenado" type="range" min="0" max="100" value={volume} onChange={e=>setVolume(+e.target.value)}/>
+    <label>Mês de referência <strong>{MONTHS[month]}</strong></label><input aria-label="Mês de referência" type="range" min="0" max="11" value={month} onChange={e=>setMonth(+e.target.value)}/><div className="month-row"><span>Jan</span><span>Jul</span><span>Dez</span></div>
     <div className="metric-grid"><div><span>VM1</span><strong>{VM1[month]}%</strong></div><div><span>VM2</span><strong>{VM2[month]}%</strong></div><div><span>VM3</span><strong>{VM3[month]}%</strong></div></div>
-    <div className="state-card" style={{'--state':current.color} as React.CSSProperties}><p>CLASSIFICAÇÃO</p><strong>{current.label}</strong><span>Capacidade máxima de referência: {current.capacity}</span></div>
+    <div className="state-card" style={{'--state':current.color} as React.CSSProperties}><p>CLASSIFICAÇÃO</p><strong>{current.label}</strong><span>Vazão máxima de referência: {current.capacity}</span></div>
     <button onClick={()=>window.location.reload()}>Redefinir vista</button>
    </aside>
    <div className="scene-wrap">
