@@ -82,7 +82,15 @@ function BasinSlopes(){
    positions.push(point.x*.42,.25,-(point.y*.58)-1.1);
   }
   const n=outer.length;
-  for(let i=0;i<n;i++){const j=(i+1)%n,a=i*2,b=a+1,c=j*2,d=c+1;indices.push(a,c,b,c,d,b)}
+  for(let i=0;i<n;i++){
+   const j=(i+1)%n;
+   const middleX=(outer[i].x+outer[j].x)/2;
+   const middleZ=-(outer[i].y+outer[j].y)/2-1.1;
+   // Abertura hidráulica real: o talude termina nas duas margens e não fecha
+   // a ligação entre o reservatório e a soleira do vertedouro.
+   if(middleX>1.78&&middleZ>-.18&&middleZ<1.66)continue;
+   const a=i*2,b=a+1,c=j*2,d=c+1;indices.push(a,c,b,c,d,b)
+  }
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[]);
  return <mesh geometry={geometry} receiveShadow castShadow><meshStandardMaterial color="#8da96b" roughness={1} side={THREE.DoubleSide}/></mesh>
@@ -117,28 +125,60 @@ function ReleasedRiver({level}:{level:number}){
 
 function Spillway({flowing}:{flowing:boolean}){
  const path=useMemo(()=>new THREE.CatmullRomCurve3([
-  new THREE.Vector3(2.35,1.32,.42),new THREE.Vector3(3.15,1.32,.4),new THREE.Vector3(3.88,1.32,.43),new THREE.Vector3(4.42,1.32,.72),new THREE.Vector3(4.48,1.32,1.38),new THREE.Vector3(4.47,.95,2.18),new THREE.Vector3(4.45,.75,3.08)
+  new THREE.Vector3(2.35,1.32,.42),new THREE.Vector3(3.15,1.32,.4),new THREE.Vector3(3.88,1.32,.43),new THREE.Vector3(4.42,1.32,.72),new THREE.Vector3(4.48,1.32,1.38),new THREE.Vector3(4.47,.84,2.16),new THREE.Vector3(4.36,.22,3.08)
  ]),[]);
  const channel=useMemo(()=>{
   const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
   pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.4),right=p.clone().addScaledVector(s,-.4);positions.push(left.x,left.y+.2,left.z,left.x,left.y,left.z,right.x,right.y,right.z,right.x,right.y+.2,right.z,left.x,left.y-.13,left.z,right.x,right.y-.13,right.z);if(i<pts.length-1){const a=i*6,b=(i+1)*6;indices.push(a+1,b+1,a+2,b+1,b+2,a+2,a,b,a+1,b,b+1,a+1,a+2,b+2,a+3,b+2,b+3,a+3,a+4,b+4,a+5,b+4,b+5,a+5,a+1,b+1,a+4,b+1,b+4,a+4,a+5,b+5,a+2,b+5,b+2,a+2)}});
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
- const ground=useMemo(()=>{
-  const groundPath=new THREE.CatmullRomCurve3([...path.points.map(point=>point.clone()),new THREE.Vector3(4.15,.55,3.48),new THREE.Vector3(3.7,.32,3.85),new THREE.Vector3(3.25,.22,4.18)]);
-  const pts=groundPath.getPoints(72),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const progress=i/(pts.length-1),width=.7+progress*.55,t=groundPath.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width),top=p.y-.13,bottom=.02;positions.push(left.x,top,left.z,right.x,top,right.z,left.x,bottom,left.z,right.x,bottom,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a,b,a+1,b,b+1,a+1,a+2,b+2,a,b+2,b,a,a+1,b+1,a+3,b+1,b+3,a+3,a+2,b+2,a+3,b+2,b+3,a+3)}});
-  const end=(pts.length-1)*4;
-  indices.push(0,1,2,1,3,2,end,end+2,end+1,end+1,end+2,end+3);
+ const apron=useMemo(()=>{
+  const apronPath=new THREE.CatmullRomCurve3([
+   ...path.points.map(point=>point.clone()),
+   new THREE.Vector3(4.08,.23,3.48),new THREE.Vector3(3.72,.23,3.76)
+  ]);
+  const pts=apronPath.getPoints(78),positions:number[]=[],indices:number[]=[];
+  pts.forEach((p,i)=>{
+   const progress=i/(pts.length-1),t=apronPath.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize();
+   const transition=THREE.MathUtils.clamp((p.z-1.32)/1.72,0,1);
+   const eased=transition*transition*(3-2*transition);
+   // A borda fica ligeiramente enterrada nos dois patamares para que a
+   // transição se funda ao solo sem linha de emenda nem conflito de faces.
+   const shoulderY=THREE.MathUtils.lerp(1.295,.075,eased);
+   const blendProgress=Math.min(progress/.72,1);
+   const endTaper=THREE.MathUtils.clamp((progress-.72)/.28,0,1);
+   const outerWidth=1.38+Math.sin(Math.PI*blendProgress)*.22-endTaper*.68;
+   const innerY=p.y-.135,innerWidth=.47;
+   const skirtFactor=THREE.MathUtils.clamp((p.z-1.35)/.62,0,1);
+   const skirtBottomY=THREE.MathUtils.lerp(shoulderY,.075,skirtFactor);
+   const outerLeft=p.clone().addScaledVector(s,outerWidth),innerLeft=p.clone().addScaledVector(s,innerWidth);
+   const innerRight=p.clone().addScaledVector(s,-innerWidth),outerRight=p.clone().addScaledVector(s,-outerWidth);
+   positions.push(
+    outerLeft.x,shoulderY,outerLeft.z,
+    innerLeft.x,innerY,innerLeft.z,
+    innerRight.x,innerY,innerRight.z,
+    outerRight.x,shoulderY,outerRight.z,
+    outerLeft.x,skirtBottomY,outerLeft.z,
+    outerRight.x,skirtBottomY,outerRight.z
+   );
+   if(i<pts.length-1){
+    const a=i*6,b=(i+1)*6;
+    for(let strip=0;strip<3;strip++)indices.push(a+strip,b+strip,a+strip+1,b+strip,b+strip+1,a+strip+1);
+    // Laterais curvas fecham o solo sob o talude sem transformar a faixa
+    // de apoio em um bloco maciço.
+    indices.push(a,b,a+4,b,b+4,a+4,a+3,a+5,b+3,b+3,a+5,b+5);
+   }
+  });
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
+ const waterPath=useMemo(()=>new THREE.CatmullRomCurve3(path.points.slice(0,5).map(point=>point.clone())),[path]);
  const water=useMemo(()=>{
-  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.28),right=p.clone().addScaledVector(s,-.28);positions.push(left.x,p.y+.025,left.z,right.x,p.y+.025,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
+  const pts=waterPath.getPoints(36),positions:number[]=[],indices:number[]=[];
+  pts.forEach((p,i)=>{const t=waterPath.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.28),right=p.clone().addScaledVector(s,-.28);positions.push(left.x,p.y+.025,left.z,right.x,p.y+.025,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
- },[path]);
+ },[waterPath]);
  return <group>
-  <mesh geometry={ground} receiveShadow><meshStandardMaterial color="#5f9257" roughness={1} side={THREE.DoubleSide}/></mesh>
+  <mesh geometry={apron} receiveShadow><meshStandardMaterial color="#78a86a" roughness={1} side={THREE.DoubleSide}/></mesh>
   <mesh geometry={channel} castShadow receiveShadow><meshStandardMaterial color="#929b9a" roughness={.78} side={THREE.DoubleSide}/></mesh>
   {flowing&&<mesh geometry={water}><meshPhysicalMaterial color="#32b6d3" transparent opacity={.9} roughness={.12} side={THREE.DoubleSide}/></mesh>}
  </group>
