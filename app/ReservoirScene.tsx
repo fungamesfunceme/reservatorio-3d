@@ -86,12 +86,36 @@ function ReleasedRiver({level}:{level:number}){
  return <mesh geometry={geometry} receiveShadow><meshPhysicalMaterial color="#31aeca" transparent opacity={.9} roughness={.15} metalness={.02} side={THREE.DoubleSide}/></mesh>
 }
 
+function Spillway({flowing}:{flowing:boolean}){
+ const path=useMemo(()=>new THREE.CatmullRomCurve3([
+  new THREE.Vector3(2.38,.91,.42),new THREE.Vector3(3.02,.9,.4),new THREE.Vector3(3.58,.86,.68),new THREE.Vector3(3.7,.74,1.42),new THREE.Vector3(3.72,.58,2.25),new THREE.Vector3(3.78,.48,3.02)
+ ]),[]);
+ const channel=useMemo(()=>{
+  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
+  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.4),right=p.clone().addScaledVector(s,-.4);positions.push(left.x,left.y+.2,left.z,left.x,left.y,left.z,right.x,right.y,right.z,right.x,right.y+.2,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a+1,b+1,a+2,b+1,b+2,a+2,a,b,a+1,b,b+1,a+1,a+2,b+2,a+3,b+2,b+3,a+3)}});
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
+ },[path]);
+ const ground=useMemo(()=>{
+  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
+  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.58),right=p.clone().addScaledVector(s,-.58);positions.push(left.x,p.y-.13,left.z,right.x,p.y-.13,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
+ },[path]);
+ const water=useMemo(()=>{
+  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
+  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.28),right=p.clone().addScaledVector(s,-.28);positions.push(left.x,p.y+.025,left.z,right.x,p.y+.025,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
+ },[path]);
+ return <group>
+  <mesh geometry={ground} receiveShadow><meshStandardMaterial color="#5f9257" roughness={1} side={THREE.DoubleSide}/></mesh>
+  <mesh geometry={channel} castShadow receiveShadow><meshStandardMaterial color="#929b9a" roughness={.78} side={THREE.DoubleSide}/></mesh>
+  {flowing&&<mesh geometry={water}><meshPhysicalMaterial color="#32b6d3" transparent opacity={.9} roughness={.12} side={THREE.DoubleSide}/></mesh>}
+ </group>
+}
+
 function Model({level,color,releasing}:{level:number;color:string;releasing:boolean}){
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
-   <mesh position={[3.72,.665,1.35]} rotation={[-Math.PI/2,0,.06]} receiveShadow><planeGeometry args={[1.12,3.1]}/><meshStandardMaterial color="#5f9257" roughness={1} side={THREE.DoubleSide}/></mesh>
-   <mesh position={[3.1,.665,.18]} rotation={[-Math.PI/2,0,0]} receiveShadow><planeGeometry args={[1.62,.76]}/><meshStandardMaterial color="#5f9257" roughness={1} side={THREE.DoubleSide}/></mesh>
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
@@ -101,12 +125,7 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <mesh position={[-.8,.62,1.98]} rotation={[0,0,0]} castShadow><torusGeometry args={[.2,.055,10,24]}/><meshStandardMaterial color="#555b59" metalness={.45} roughness={.48}/></mesh>
    {releasing&&<mesh position={[-.8,.62,2.02]}><circleGeometry args={[.16,20]}/><meshStandardMaterial color="#30b2d0" side={THREE.DoubleSide}/></mesh>}
    {releasing&&<ReleasedRiver level={level}/>} 
-   <mesh position={[3.72,.87,1.35]} rotation={[0,.06,0]} castShadow><boxGeometry args={[.82,.38,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
-   <mesh position={[3.1,.87,.18]} castShadow><boxGeometry args={[1.55,.36,.72]}/><meshStandardMaterial color="#8e9996"/></mesh>
-   {level>=99&&<>
-    <mesh position={[3.72,1.075,1.35]} rotation={[-Math.PI/2,0,.06]}><planeGeometry args={[.48,2.8]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
-    <mesh position={[3.1,1.075,.18]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[1.3,.42]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
-   </>}
+   <Spillway flowing={level>=99}/>
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
    {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.02:1.12,z]} scale={.8+(i%3)*.14}/>)}
