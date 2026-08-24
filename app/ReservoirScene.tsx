@@ -53,7 +53,7 @@ function ValleyTerrain(){
   const hole=new THREE.Path();
   hole.moveTo(-2.78,-2.3);hole.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);hole.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);hole.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);hole.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);hole.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);hole.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);hole.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);hole.lineTo(-2.78,-2.3);hole.closePath();
   outer.holes.push(hole);
-  return new THREE.ExtrudeGeometry(outer,{depth:1.05,bevelEnabled:true,bevelSize:.08,bevelThickness:.06,bevelSegments:2,curveSegments:36});
+  return new THREE.ExtrudeGeometry(outer,{depth:1.05,bevelEnabled:false,curveSegments:36});
  },[]);
  return <mesh geometry={geometry} rotation={[-Math.PI/2,0,0]} position={[0,.08,-1.1]} castShadow receiveShadow><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
 }
@@ -90,8 +90,8 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
-   <mesh position={[3.72,.325,1.35]} rotation={[0,.06,0]} receiveShadow><boxGeometry args={[1.14,.65,3.12]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
-   <mesh position={[3.1,.325,.18]} receiveShadow><boxGeometry args={[1.64,.65,.78]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
+   <mesh position={[3.72,.3,1.35]} rotation={[0,.06,0]} receiveShadow><boxGeometry args={[.74,.6,2.98]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
+   <mesh position={[3.1,.3,.18]} receiveShadow><boxGeometry args={[1.46,.6,.64]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
