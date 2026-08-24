@@ -97,7 +97,7 @@ function Spillway({flowing}:{flowing:boolean}){
  },[path]);
  const ground=useMemo(()=>{
   const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const progress=i/(pts.length-1),width=.5+progress*.6,t=path.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width);positions.push(left.x,p.y-.13,left.z,right.x,p.y-.13,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
+  pts.forEach((p,i)=>{const progress=i/(pts.length-1),width=.5+progress*.6,t=path.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width),top=p.y-.13,bottom=.02;positions.push(left.x,top,left.z,right.x,top,right.z,left.x,bottom,left.z,right.x,bottom,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a,b,a+1,b,b+1,a+1,a+2,b+2,a,b+2,b,a,a+1,b+1,a+3,b+1,b+3,a+3,a+2,b+2,a+3,b+2,b+3,a+3)}});
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
  const water=useMemo(()=>{
