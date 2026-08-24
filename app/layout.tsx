@@ -1,25 +1,15 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import './reservoir.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
 export const metadata: Metadata = {
+  metadataBase: new URL('https://fungamesfunceme.github.io/reservatorio-3d/'),
   title: 'Reservatório 3D — Relógio da Seca de Tauá',
   description: 'Simulação conceitual interativa dos estados de seca do Hidrossistema Arneiroz II.',
   openGraph: {
     title: 'Reservatório 3D — Relógio da Seca de Tauá',
     description: 'Explore os estados de seca do Hidrossistema Arneiroz II em um modelo conceitual interativo.',
-    images: [{ url: '/reservatorio-og.png', width: 1200, height: 630 }],
+    images: [{ url: '/reservatorio-3d/reservatorio-og.png', width: 1200, height: 630 }],
     locale: 'pt_BR',
     type: 'website',
   },
@@ -32,9 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="antialiased">
         {children}
       </body>
     </html>
