@@ -90,9 +90,9 @@ function DownstreamTerrain(){
   s.moveTo(-5.8,-1.5);
   s.bezierCurveTo(-3.55,-1.64,-1.45,-1.5,.25,-1.6);
   s.bezierCurveTo(2.15,-1.72,4.15,-1.54,5.8,-1.62);
-  s.lineTo(5.8,-4.88);
-  s.bezierCurveTo(3.65,-5.02,1.45,-4.88,-.45,-4.96);
-  s.bezierCurveTo(-2.7,-5.04,-4.65,-4.9,-5.8,-4.82);
+  s.lineTo(5.8,-5.72);
+  s.bezierCurveTo(3.65,-5.86,1.45,-5.72,-.45,-5.8);
+  s.bezierCurveTo(-2.7,-5.88,-4.65,-5.74,-5.8,-5.66);
   s.closePath();
   return new THREE.ExtrudeGeometry(s,{depth:.08,bevelEnabled:false,curveSegments:28});
  },[]);
@@ -141,7 +141,7 @@ function Spillway({flowing}:{flowing:boolean}){
 
 function Model({level,color,releasing}:{level:number;color:string;releasing:boolean}){
  return <group rotation={[0,-.12,0]}>
-   <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
+   <mesh position={[0,-.65,.45]} receiveShadow><boxGeometry args={[12,1.3,10.9]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <DownstreamTerrain/>
    <ValleyTerrain/>
    <BasinSlopes/>
