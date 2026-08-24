@@ -106,16 +106,10 @@ function Spillway({flowing}:{flowing:boolean}){
   pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.28),right=p.clone().addScaledVector(s,-.28);positions.push(left.x,p.y+.025,left.z,right.x,p.y+.025,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
- const tailwater=useMemo(()=>{
-  const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(4.45,.46,3.08),new THREE.Vector3(3.55,.44,3.72),new THREE.Vector3(2.25,.43,4.35),new THREE.Vector3(1.05,.42,5.05),new THREE.Vector3(.3,.42,5.62)]),pts=curve.getPoints(44),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const progress=i/(pts.length-1),t=curve.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),width=.3+progress*.08,left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width);positions.push(left.x,p.y,left.z,right.x,p.y,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
- },[]);
  return <group>
   <mesh geometry={ground} receiveShadow><meshStandardMaterial color="#5f9257" roughness={1} side={THREE.DoubleSide}/></mesh>
   <mesh geometry={channel} castShadow receiveShadow><meshStandardMaterial color="#929b9a" roughness={.78} side={THREE.DoubleSide}/></mesh>
   {flowing&&<mesh geometry={water}><meshPhysicalMaterial color="#32b6d3" transparent opacity={.9} roughness={.12} side={THREE.DoubleSide}/></mesh>}
-  {flowing&&<mesh geometry={tailwater}><meshPhysicalMaterial color="#32b6d3" transparent opacity={.9} roughness={.16} side={THREE.DoubleSide}/></mesh>}
  </group>
 }
 
