@@ -48,7 +48,7 @@ function ValleyTerrain(){
  const geometry=useMemo(()=>{
   const outer=new THREE.Shape();
   outer.moveTo(-5.7,-2.7);
-  outer.lineTo(3.15,-2.7);outer.lineTo(3.15,-.62);outer.lineTo(4.3,-.62);outer.lineTo(4.3,-2.7);
+  outer.lineTo(3.15,-2.7);outer.lineTo(3.15,-1.7);outer.lineTo(2.22,-1.7);outer.lineTo(2.22,-.82);outer.lineTo(4.3,-.82);outer.lineTo(4.3,-2.7);
   outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
   const hole=new THREE.Path();
   hole.moveTo(-2.78,-2.3);hole.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);hole.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);hole.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);hole.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);hole.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);hole.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);hole.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);hole.lineTo(-2.78,-2.3);hole.closePath();
@@ -90,7 +90,8 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
-   <mesh position={[3.72,.28,1.35]} rotation={[0,.06,0]} receiveShadow><boxGeometry args={[1.18,.56,3.12]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
+   <mesh position={[3.72,.34,1.35]} rotation={[0,.06,0]} receiveShadow><boxGeometry args={[1.14,.68,3.12]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
+   <mesh position={[3.1,.34,.18]} receiveShadow><boxGeometry args={[1.64,.68,.78]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
