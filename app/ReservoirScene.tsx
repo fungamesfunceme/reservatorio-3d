@@ -50,7 +50,15 @@ function BasinFloor(){
 function ValleyTerrain(){
  const geometry=useMemo(()=>{
   const outer=new THREE.Shape();
-  outer.moveTo(-5.7,-2.7);outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
+  outer.moveTo(-5.7,-2.7);
+  // Recorte orgânico para o vertedouro: o patamar principal não invade o canal.
+  outer.lineTo(3.68,-2.7);
+  outer.bezierCurveTo(3.7,-2.45,3.72,-2.18,3.58,-1.95);
+  outer.bezierCurveTo(3.35,-1.68,2.9,-1.55,2.28,-1.55);
+  outer.lineTo(2.28,-1.32);
+  outer.bezierCurveTo(2.8,-1.3,3.48,-1.38,3.9,-1.62);
+  outer.bezierCurveTo(4.65,-1.8,5.18,-2.25,5.32,-2.7);
+  outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
   const hole=new THREE.Path();
   hole.moveTo(-2.78,-2.3);hole.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);hole.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);hole.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);hole.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);hole.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);hole.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);hole.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);hole.lineTo(-2.78,-2.3);hole.closePath();
   outer.holes.push(hole);
@@ -112,8 +120,11 @@ function Spillway({flowing}:{flowing:boolean}){
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
  const ground=useMemo(()=>{
-  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const progress=i/(pts.length-1),width=.5+progress*.6,t=path.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width),top=p.y-.13,bottom=.02;positions.push(left.x,top,left.z,right.x,top,right.z,left.x,bottom,left.z,right.x,bottom,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a,b,a+1,b,b+1,a+1,a+2,b+2,a,b+2,b,a,a+1,b+1,a+3,b+1,b+3,a+3,a+2,b+2,a+3,b+2,b+3,a+3)}});
+  const groundPath=new THREE.CatmullRomCurve3([...path.points.map(point=>point.clone()),new THREE.Vector3(4.15,.55,3.48),new THREE.Vector3(3.7,.32,3.85),new THREE.Vector3(3.25,.22,4.18)]);
+  const pts=groundPath.getPoints(72),positions:number[]=[],indices:number[]=[];
+  pts.forEach((p,i)=>{const progress=i/(pts.length-1),width=.7+progress*.55,t=groundPath.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width),top=p.y-.13,bottom=.02;positions.push(left.x,top,left.z,right.x,top,right.z,left.x,bottom,left.z,right.x,bottom,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a,b,a+1,b,b+1,a+1,a+2,b+2,a,b+2,b,a,a+1,b+1,a+3,b+1,b+3,a+3,a+2,b+2,a+3,b+2,b+3,a+3)}});
+  const end=(pts.length-1)*4;
+  indices.push(0,1,2,1,3,2,end,end+2,end+1,end+1,end+2,end+3);
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
  const water=useMemo(()=>{
