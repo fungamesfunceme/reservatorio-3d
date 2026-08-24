@@ -105,7 +105,7 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    </>}
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
-   {[[-5,0,-3.4],[-4.6,0,2.9],[-3.6,0,-4],[3.8,0,-3.8],[5,0,-1.5],[4.9,0,3.5],[-4.5,0,4]].map((p,i)=><Tree key={i} position={[p[0],.95,p[2]]} scale={.8+(i%3)*.14}/>)}
+   {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.02:1.12,z]} scale={.8+(i%3)*.14}/>)}
   </group>
 }
 
