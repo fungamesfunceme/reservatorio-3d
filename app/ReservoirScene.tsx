@@ -14,9 +14,12 @@ function Tree({ position, scale = 1 }: { position: [number, number, number]; sca
 
 function Water({ level, color }: { level:number; color:string }) {
   const geometry=useMemo(()=>{
-    const width=.58+level*.005;
-    const reach=.72+level*.003;
-    const depth=.08+level*.0075;
+    const fill=level/100;
+    // A expansão adicional concentra-se nos níveis altos: a cota máxima
+    // alcança a soleira do vertedouro sem alterar de forma brusca as secas.
+    const width=.58+.52*fill;
+    const reach=.72+.37*fill;
+    const depth=.08+.75*fill+.125*Math.pow(fill,3);
     const s=new THREE.Shape();
     // A borda de jusante permanece fixa junto à barragem em qualquer volume.
     s.moveTo(-2.35*width,-2.08);
@@ -129,7 +132,7 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <mesh position={[-.8,.62,1.98]} rotation={[0,0,0]} castShadow><torusGeometry args={[.2,.055,10,24]}/><meshStandardMaterial color="#555b59" metalness={.45} roughness={.48}/></mesh>
    {releasing&&<mesh position={[-.8,.62,2.02]}><circleGeometry args={[.16,20]}/><meshStandardMaterial color="#30b2d0" side={THREE.DoubleSide}/></mesh>}
    {releasing&&<ReleasedRiver level={level}/>} 
-   <Spillway flowing={level>=99}/>
+   <Spillway flowing={level>=100}/>
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
    {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.02:1.12,z]} scale={.8+(i%3)*.14}/>)}
