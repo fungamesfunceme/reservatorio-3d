@@ -90,8 +90,8 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
-   <mesh position={[3.72,.34,1.35]} rotation={[0,.06,0]} receiveShadow><boxGeometry args={[1.14,.68,3.12]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
-   <mesh position={[3.1,.34,.18]} receiveShadow><boxGeometry args={[1.64,.68,.78]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
+   <mesh position={[3.72,.325,1.35]} rotation={[0,.06,0]} receiveShadow><boxGeometry args={[1.14,.65,3.12]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
+   <mesh position={[3.1,.325,.18]} receiveShadow><boxGeometry args={[1.64,.65,.78]}/><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
