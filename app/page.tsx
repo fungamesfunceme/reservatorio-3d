@@ -5,7 +5,7 @@ const MONTHS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov',
 const VM1=[30,28,26,26,28,28,44,42,40,37,35,32], VM2=[23,22,20,20,22,22,36,34,32,30,27,25], VM3=[12,11,10,10,12,12,22,21,19,18,16,14];
 const states={normal:{label:'Normal',color:'#2ea7df',capacity:'700 L/s'},alerta:{label:'Alerta',color:'#f6d74b',capacity:'511 L/s'},seca:{label:'Seca',color:'#f3a13b',capacity:'224 L/s'},severa:{label:'Seca Severa',color:'#e85b4f',capacity:'140 L/s'}};
 export default function Home(){
- const [volume,setVolume]=useState(44),[month,setMonth]=useState(6);
+ const [volume,setVolume]=useState(50),[month,setMonth]=useState(6);
  const stateKey=useMemo(()=>volume>VM1[month]?'normal':volume>VM2[month]?'alerta':volume>VM3[month]?'seca':'severa',[volume,month]);
  const current=states[stateKey];
  return <main className="app-shell">
