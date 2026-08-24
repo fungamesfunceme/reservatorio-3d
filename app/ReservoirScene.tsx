@@ -92,7 +92,7 @@ function Spillway({flowing}:{flowing:boolean}){
  ]),[]);
  const channel=useMemo(()=>{
   const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.4),right=p.clone().addScaledVector(s,-.4);positions.push(left.x,left.y+.2,left.z,left.x,left.y,left.z,right.x,right.y,right.z,right.x,right.y+.2,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a+1,b+1,a+2,b+1,b+2,a+2,a,b,a+1,b,b+1,a+1,a+2,b+2,a+3,b+2,b+3,a+3)}});
+  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.4),right=p.clone().addScaledVector(s,-.4);positions.push(left.x,left.y+.2,left.z,left.x,left.y,left.z,right.x,right.y,right.z,right.x,right.y+.2,right.z,left.x,left.y-.13,left.z,right.x,right.y-.13,right.z);if(i<pts.length-1){const a=i*6,b=(i+1)*6;indices.push(a+1,b+1,a+2,b+1,b+2,a+2,a,b,a+1,b,b+1,a+1,a+2,b+2,a+3,b+2,b+3,a+3,a+4,b+4,a+5,b+4,b+5,a+5,a+1,b+1,a+4,b+1,b+4,a+4,a+5,b+5,a+2,b+5,b+2,a+2)}});
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[path]);
  const ground=useMemo(()=>{
