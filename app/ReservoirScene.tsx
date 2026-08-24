@@ -76,6 +76,30 @@ function BasinSlopes(){
  return <mesh geometry={geometry} receiveShadow castShadow><meshStandardMaterial color="#8da96b" roughness={1} side={THREE.DoubleSide}/></mesh>
 }
 
+function DownstreamTerrain(){
+ const green=useMemo(()=>{
+  const s=new THREE.Shape();
+  s.moveTo(-5.8,-1.5);
+  s.bezierCurveTo(-3.55,-1.64,-1.45,-1.5,.25,-1.6);
+  s.bezierCurveTo(2.15,-1.72,4.15,-1.54,5.8,-1.62);
+  s.lineTo(5.8,-4.88);
+  s.bezierCurveTo(3.65,-5.02,1.45,-4.88,-.45,-4.96);
+  s.bezierCurveTo(-2.7,-5.04,-4.65,-4.9,-5.8,-4.82);
+  s.closePath();
+  return new THREE.ExtrudeGeometry(s,{depth:.08,bevelEnabled:false,curveSegments:28});
+ },[]);
+ const dryStrip=useMemo(()=>{
+  const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(-.8,.105,1.82),new THREE.Vector3(-.35,.105,2.65),new THREE.Vector3(.45,.105,3.25),new THREE.Vector3(-.18,.105,4.15),new THREE.Vector3(.12,.105,4.92)]);
+  const points=curve.getPoints(56),positions:number[]=[],indices:number[]=[];
+  points.forEach((point,i)=>{const progress=i/(points.length-1),tangent=curve.getTangent(progress),side=new THREE.Vector3(-tangent.z,0,tangent.x).normalize(),width=.54+progress*.3+Math.sin(progress*Math.PI*3)*.055,left=point.clone().addScaledVector(side,width),right=point.clone().addScaledVector(side,-width);positions.push(left.x,left.y,left.z,right.x,right.y,right.z);if(i<points.length-1){const a=i*2,b=a+1,c=a+2,d=a+3;indices.push(a,c,b,c,d,b)}});
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
+ },[]);
+ return <group>
+  <mesh geometry={green} rotation={[-Math.PI/2,0,0]} position={[0,.01,0]} receiveShadow><meshStandardMaterial color="#78a86a" roughness={1}/></mesh>
+  <mesh geometry={dryStrip} receiveShadow><meshStandardMaterial color="#c4a66d" roughness={1} side={THREE.DoubleSide}/></mesh>
+ </group>
+}
+
 function ReleasedRiver({level}:{level:number}){
  const geometry=useMemo(()=>{
   const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(-.8,.5,1.92),new THREE.Vector3(-.35,.49,2.65),new THREE.Vector3(.45,.47,3.25),new THREE.Vector3(-.18,.45,4.15),new THREE.Vector3(.18,.43,5.7)]);
@@ -116,6 +140,7 @@ function Spillway({flowing}:{flowing:boolean}){
 function Model({level,color,releasing}:{level:number;color:string;releasing:boolean}){
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
+   <DownstreamTerrain/>
    <ValleyTerrain/>
    <BasinSlopes/>
    <BasinFloor/>
