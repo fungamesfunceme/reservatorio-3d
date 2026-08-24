@@ -88,7 +88,7 @@ function ReleasedRiver({level}:{level:number}){
 
 function Spillway({flowing}:{flowing:boolean}){
  const path=useMemo(()=>new THREE.CatmullRomCurve3([
-  new THREE.Vector3(2.35,.92,.42),new THREE.Vector3(3.15,.92,.4),new THREE.Vector3(3.88,.9,.43),new THREE.Vector3(4.42,.84,.72),new THREE.Vector3(4.48,.73,1.38),new THREE.Vector3(4.47,.61,2.18),new THREE.Vector3(4.45,.5,3.08)
+  new THREE.Vector3(2.35,1.22,.42),new THREE.Vector3(3.15,1.22,.4),new THREE.Vector3(3.88,1.2,.43),new THREE.Vector3(4.42,1.14,.72),new THREE.Vector3(4.48,1.03,1.38),new THREE.Vector3(4.47,.86,2.18),new THREE.Vector3(4.45,.68,3.08)
  ]),[]);
  const channel=useMemo(()=>{
   const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
