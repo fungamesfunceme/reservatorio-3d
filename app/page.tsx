@@ -32,7 +32,7 @@ function DroughtClock({volume,month,stateKey}:{volume:number;month:number;stateK
 }
 
 export default function Home(){
- const [volume,setVolume]=useState(44),[month,setMonth]=useState(6);
+ const [volume,setVolume]=useState(50),[month,setMonth]=useState(6);
  const [simulationMode,setSimulationMode]=useState<'fill'|'drain'>('fill');
  const [isPlaying,setIsPlaying]=useState(false);
  const stateKey=useMemo(()=>volume>VM1[month]?'normal':volume>VM2[month]?'alerta':volume>VM3[month]?'seca':'severa',[volume,month]);
