@@ -55,8 +55,8 @@ function ValleyTerrain(){
   outer.lineTo(3.68,-2.7);
   outer.bezierCurveTo(3.7,-2.45,3.72,-2.18,3.58,-1.95);
   outer.bezierCurveTo(3.35,-1.68,2.9,-1.55,2.28,-1.55);
-  outer.bezierCurveTo(2.12,-1.49,2.05,-1.34,2.24,-1.24);
-  outer.bezierCurveTo(2.58,-1.06,3.34,-1.3,3.9,-1.62);
+  outer.lineTo(2.28,-1.32);
+  outer.bezierCurveTo(2.8,-1.3,3.48,-1.38,3.9,-1.62);
   outer.bezierCurveTo(4.65,-1.8,5.18,-2.25,5.32,-2.7);
   outer.lineTo(5.7,-2.7);
   outer.bezierCurveTo(5.5,-1.75,5.86,-.65,5.58,.35);
