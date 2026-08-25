@@ -14,12 +14,9 @@ function Tree({ position, scale = 1 }: { position: [number, number, number]; sca
 
 function Water({ level, color }: { level:number; color:string }) {
   const geometry=useMemo(()=>{
-    const fill=level/100;
-    // A expansão adicional concentra-se nos níveis altos: a cota máxima
-    // alcança a soleira do vertedouro sem alterar de forma brusca as secas.
-    const width=.58+.52*fill;
-    const reach=.72+.37*fill;
-    const depth=.08+.75*fill+.125*Math.pow(fill,3);
+    const width=.58+level*.005;
+    const reach=.72+level*.003;
+    const depth=.08+level*.0075;
     const s=new THREE.Shape();
     // A borda de jusante permanece fixa junto à barragem em qualquer volume.
     s.moveTo(-2.35*width,-2.08);
@@ -50,19 +47,11 @@ function BasinFloor(){
 function ValleyTerrain(){
  const geometry=useMemo(()=>{
   const outer=new THREE.Shape();
-  outer.moveTo(-5.7,-2.7);
-  // Recorte orgânico para o vertedouro: o patamar principal não invade o canal.
-  outer.lineTo(3.68,-2.7);
-  outer.bezierCurveTo(3.7,-2.45,3.72,-2.18,3.58,-1.95);
-  outer.bezierCurveTo(3.35,-1.68,2.9,-1.55,2.28,-1.55);
-  outer.lineTo(2.28,-1.32);
-  outer.bezierCurveTo(2.8,-1.3,3.48,-1.38,3.9,-1.62);
-  outer.bezierCurveTo(4.65,-1.8,5.18,-2.25,5.32,-2.7);
-  outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
+  outer.moveTo(-5.7,-2.7);outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
   const hole=new THREE.Path();
   hole.moveTo(-2.78,-2.3);hole.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);hole.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);hole.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);hole.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);hole.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);hole.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);hole.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);hole.lineTo(-2.78,-2.3);hole.closePath();
   outer.holes.push(hole);
-  return new THREE.ExtrudeGeometry(outer,{depth:1.23,bevelEnabled:false,curveSegments:36});
+  return new THREE.ExtrudeGeometry(outer,{depth:1.05,bevelEnabled:true,bevelSize:.08,bevelThickness:.06,bevelSegments:2,curveSegments:36});
  },[]);
  return <mesh geometry={geometry} rotation={[-Math.PI/2,0,0]} position={[0,.08,-1.1]} castShadow receiveShadow><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
 }
@@ -73,8 +62,8 @@ function BasinSlopes(){
   contour.moveTo(-2.78,-2.3);contour.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);contour.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);contour.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);contour.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);contour.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);contour.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);contour.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);contour.lineTo(-2.78,-2.3);
   const outer=contour.getSpacedPoints(128),positions:number[]=[],indices:number[]=[];
   for(const point of outer){
-   positions.push(point.x,1.3,-point.y-1.1);
-   // A borda acompanha a cota máxima sem encobrir o vertedouro.
+   positions.push(point.x,1.08,-point.y-1.1);
+   // Recuo médio de 1,78 m para 0,83 m de desnível: talude ≈ 25°.
    positions.push(point.x*.42,.25,-(point.y*.58)-1.1);
   }
   const n=outer.length;
@@ -82,21 +71,6 @@ function BasinSlopes(){
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
  },[]);
  return <mesh geometry={geometry} receiveShadow castShadow><meshStandardMaterial color="#8da96b" roughness={1} side={THREE.DoubleSide}/></mesh>
-}
-
-function DownstreamTerrain(){
- const green=useMemo(()=>{
-  const s=new THREE.Shape();
-  s.moveTo(-5.8,-1.5);
-  s.bezierCurveTo(-3.55,-1.64,-1.45,-1.5,.25,-1.6);
-  s.bezierCurveTo(2.15,-1.72,4.15,-1.54,5.8,-1.62);
-  s.lineTo(5.8,-5.72);
-  s.bezierCurveTo(3.65,-5.86,1.45,-5.72,-.45,-5.8);
-  s.bezierCurveTo(-2.7,-5.88,-4.65,-5.74,-5.8,-5.66);
-  s.closePath();
-  return new THREE.ExtrudeGeometry(s,{depth:.08,bevelEnabled:false,curveSegments:28});
- },[]);
- return <mesh geometry={green} rotation={[-Math.PI/2,0,0]} position={[0,.01,0]} receiveShadow><meshStandardMaterial color="#78a86a" roughness={1}/></mesh>
 }
 
 function ReleasedRiver({level}:{level:number}){
@@ -110,39 +84,9 @@ function ReleasedRiver({level}:{level:number}){
  return <mesh geometry={geometry} receiveShadow><meshPhysicalMaterial color="#31aeca" transparent opacity={.9} roughness={.15} metalness={.02} side={THREE.DoubleSide}/></mesh>
 }
 
-function Spillway({flowing}:{flowing:boolean}){
- const path=useMemo(()=>new THREE.CatmullRomCurve3([
-  new THREE.Vector3(2.35,1.32,.42),new THREE.Vector3(3.15,1.32,.4),new THREE.Vector3(3.88,1.32,.43),new THREE.Vector3(4.42,1.32,.72),new THREE.Vector3(4.48,1.32,1.38),new THREE.Vector3(4.47,.95,2.18),new THREE.Vector3(4.45,.75,3.08)
- ]),[]);
- const channel=useMemo(()=>{
-  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.4),right=p.clone().addScaledVector(s,-.4);positions.push(left.x,left.y+.2,left.z,left.x,left.y,left.z,right.x,right.y,right.z,right.x,right.y+.2,right.z,left.x,left.y-.13,left.z,right.x,right.y-.13,right.z);if(i<pts.length-1){const a=i*6,b=(i+1)*6;indices.push(a+1,b+1,a+2,b+1,b+2,a+2,a,b,a+1,b,b+1,a+1,a+2,b+2,a+3,b+2,b+3,a+3,a+4,b+4,a+5,b+4,b+5,a+5,a+1,b+1,a+4,b+1,b+4,a+4,a+5,b+5,a+2,b+5,b+2,a+2)}});
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
- },[path]);
- const ground=useMemo(()=>{
-  const groundPath=new THREE.CatmullRomCurve3([...path.points.map(point=>point.clone()),new THREE.Vector3(4.15,.55,3.48),new THREE.Vector3(3.7,.32,3.85),new THREE.Vector3(3.25,.22,4.18)]);
-  const pts=groundPath.getPoints(72),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const progress=i/(pts.length-1),width=.7+progress*.55,t=groundPath.getTangent(progress),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,width),right=p.clone().addScaledVector(s,-width),top=p.y-.13,bottom=.02;positions.push(left.x,top,left.z,right.x,top,right.z,left.x,bottom,left.z,right.x,bottom,right.z);if(i<pts.length-1){const a=i*4,b=(i+1)*4;indices.push(a,b,a+1,b,b+1,a+1,a+2,b+2,a,b+2,b,a,a+1,b+1,a+3,b+1,b+3,a+3,a+2,b+2,a+3,b+2,b+3,a+3)}});
-  const end=(pts.length-1)*4;
-  indices.push(0,1,2,1,3,2,end,end+2,end+1,end+1,end+2,end+3);
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
- },[path]);
- const water=useMemo(()=>{
-  const pts=path.getPoints(56),positions:number[]=[],indices:number[]=[];
-  pts.forEach((p,i)=>{const t=path.getTangent(i/(pts.length-1)),s=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(s,.28),right=p.clone().addScaledVector(s,-.28);positions.push(left.x,p.y+.025,left.z,right.x,p.y+.025,right.z);if(i<pts.length-1){const a=i*2,b=(i+1)*2;indices.push(a,b,a+1,b,b+1,a+1)}});
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return g;
- },[path]);
- return <group>
-  <mesh geometry={ground} receiveShadow><meshStandardMaterial color="#5f9257" roughness={1} side={THREE.DoubleSide}/></mesh>
-  <mesh geometry={channel} castShadow receiveShadow><meshStandardMaterial color="#929b9a" roughness={.78} side={THREE.DoubleSide}/></mesh>
-  {flowing&&<mesh geometry={water}><meshPhysicalMaterial color="#32b6d3" transparent opacity={.9} roughness={.12} side={THREE.DoubleSide}/></mesh>}
- </group>
-}
-
 function Model({level,color,releasing}:{level:number;color:string;releasing:boolean}){
  return <group rotation={[0,-.12,0]}>
-   <mesh position={[0,-.65,.45]} receiveShadow><boxGeometry args={[12,1.3,10.9]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
-   <DownstreamTerrain/>
+   <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
    <BasinSlopes/>
    <BasinFloor/>
@@ -153,10 +97,15 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <mesh position={[-.8,.62,1.98]} rotation={[0,0,0]} castShadow><torusGeometry args={[.2,.055,10,24]}/><meshStandardMaterial color="#555b59" metalness={.45} roughness={.48}/></mesh>
    {releasing&&<mesh position={[-.8,.62,2.02]}><circleGeometry args={[.16,20]}/><meshStandardMaterial color="#30b2d0" side={THREE.DoubleSide}/></mesh>}
    {releasing&&<ReleasedRiver level={level}/>} 
-   <Spillway flowing={level>=100}/>
+   <mesh position={[3.72,.87,1.35]} rotation={[0,.06,0]} castShadow><boxGeometry args={[.82,.38,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   <mesh position={[3.1,.87,.18]} castShadow><boxGeometry args={[1.55,.36,.72]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   {level>=99&&<>
+    <mesh position={[3.72,1.075,1.35]} rotation={[-Math.PI/2,0,.06]}><planeGeometry args={[.48,2.8]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
+    <mesh position={[3.1,1.075,.18]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[1.3,.42]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
+   </>}
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
-   {[[-5,-3.4,.8],[-4.6,2.9,.94],[-3.6,-4,1.08],[3.8,-3.8,.8],[5,-1.5,.94],[-4.5,4,.8]].map(([x,z,treeScale],i)=><Tree key={i} position={[x,z>1.6?.02:1.12,z]} scale={treeScale}/>)}
+   {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.02:1.12,z]} scale={.8+(i%3)*.14}/>)}
   </group>
 }
 
