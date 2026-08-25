@@ -97,11 +97,12 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <mesh position={[-.8,.62,1.98]} rotation={[0,0,0]} castShadow><torusGeometry args={[.2,.055,10,24]}/><meshStandardMaterial color="#555b59" metalness={.45} roughness={.48}/></mesh>
    {releasing&&<mesh position={[-.8,.62,2.02]}><circleGeometry args={[.16,20]}/><meshStandardMaterial color="#30b2d0" side={THREE.DoubleSide}/></mesh>}
    {releasing&&<ReleasedRiver level={level}/>} 
-   <mesh position={[3.72,.87,1.35]} rotation={[0,.06,0]} castShadow><boxGeometry args={[.82,.38,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
-   <mesh position={[3.1,.87,.18]} castShadow><boxGeometry args={[1.55,.36,.72]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   {/* O vertedouro começa na divisão da margem direita do lago (x ≈ 1,89). */}
+   <mesh position={[3.28,.87,1.35]} rotation={[0,.06,0]} castShadow><boxGeometry args={[.82,.38,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   <mesh position={[2.66,.87,.18]} castShadow><boxGeometry args={[1.55,.36,.72]}/><meshStandardMaterial color="#8e9996"/></mesh>
    {level>=99&&<>
-    <mesh position={[3.72,1.075,1.35]} rotation={[-Math.PI/2,0,.06]}><planeGeometry args={[.48,2.8]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
-    <mesh position={[3.1,1.075,.18]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[1.3,.42]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
+    <mesh position={[3.28,1.075,1.35]} rotation={[-Math.PI/2,0,.06]}><planeGeometry args={[.48,2.8]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
+    <mesh position={[2.66,1.075,.18]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[1.3,.42]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
    </>}
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
