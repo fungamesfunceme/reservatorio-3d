@@ -91,16 +91,21 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
-   <mesh position={[0,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[8.1,1.35,.9]}/><meshStandardMaterial color="#b66c2f" roughness={.85}/></mesh>
-   <mesh position={[0,1.77,1.45]} castShadow><boxGeometry args={[8.25,.16,.9]}/><meshStandardMaterial color="#df9a52"/></mesh>
+   {/* Barragem dividida para deixar livre a passagem do vertedouro. */}
+   <mesh position={[-1.345,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[5.41,1.35,.9]}/><meshStandardMaterial color="#b66c2f" roughness={.85}/></mesh>
+   <mesh position={[3.245,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[1.61,1.35,.9]}/><meshStandardMaterial color="#b66c2f" roughness={.85}/></mesh>
+   <mesh position={[-1.3825,1.77,1.45]} castShadow><boxGeometry args={[5.485,.16,.9]}/><meshStandardMaterial color="#df9a52"/></mesh>
+   <mesh position={[3.2825,1.77,1.45]} castShadow><boxGeometry args={[1.685,.16,.9]}/><meshStandardMaterial color="#df9a52"/></mesh>
    <mesh position={[-.8,.62,1.45]} rotation={[Math.PI/2,0,0]} castShadow><cylinderGeometry args={[.2,.2,1.2,20]}/><meshStandardMaterial color="#777c78" metalness={.35} roughness={.55}/></mesh>
    <mesh position={[-.8,.62,1.98]} rotation={[0,0,0]} castShadow><torusGeometry args={[.2,.055,10,24]}/><meshStandardMaterial color="#555b59" metalness={.45} roughness={.48}/></mesh>
    {releasing&&<mesh position={[-.8,.62,2.02]}><circleGeometry args={[.16,20]}/><meshStandardMaterial color="#30b2d0" side={THREE.DoubleSide}/></mesh>}
    {releasing&&<ReleasedRiver level={level}/>} 
-   {/* Canal reto: sai do lago, atravessa a barragem e continua a jusante. */}
-   <mesh position={[1.9,.87,1.35]} castShadow><boxGeometry args={[.82,.38,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   {/* Canal reto em U: piso na cota maxima e duas paredes laterais. */}
+   <mesh position={[1.9,1.135,1.35]} castShadow receiveShadow><boxGeometry args={[.82,.12,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   <mesh position={[1.55,1.365,1.35]} castShadow><boxGeometry args={[.12,.34,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
+   <mesh position={[2.25,1.365,1.35]} castShadow><boxGeometry args={[.12,.34,3.05]}/><meshStandardMaterial color="#8e9996"/></mesh>
    {level>=99&&<>
-    <mesh position={[1.9,1.075,1.35]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[.48,2.8]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
+    <mesh position={[1.9,1.207,1.35]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[.56,2.8]}/><meshStandardMaterial color="#32b6d3" side={THREE.DoubleSide}/></mesh>
    </>}
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
