@@ -56,6 +56,25 @@ function ValleyTerrain(){
  return <mesh geometry={geometry} rotation={[-Math.PI/2,0,0]} position={[0,.08,-1.1]} castShadow receiveShadow><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>
 }
 
+function ValleyShoulders(){
+ const geometries=useMemo(()=>{
+  const left=new THREE.Shape();
+  left.moveTo(-6.08,-2.65);left.lineTo(-3.35,-2.65);
+  left.bezierCurveTo(-3.28,-1.55,-3.55,-.5,-3.35,.55);
+  left.bezierCurveTo(-3.18,1.55,-3.28,2.65,-3.72,3.55);
+  left.bezierCurveTo(-4.02,4.15,-4.48,4.55,-4.95,4.68);
+  left.lineTo(-6.08,4.68);left.closePath();
+  const right=new THREE.Shape();
+  right.moveTo(3.25,-2.65);right.lineTo(6.08,-2.65);right.lineTo(6.08,4.68);right.lineTo(4.95,4.68);
+  right.bezierCurveTo(4.48,4.55,4.02,4.15,3.72,3.55);
+  right.bezierCurveTo(3.28,2.65,3.18,1.55,3.35,.55);
+  right.bezierCurveTo(3.55,-.5,3.28,-1.55,3.25,-2.65);right.closePath();
+  const options={depth:.54,bevelEnabled:true,bevelSize:.07,bevelThickness:.04,bevelSegments:2,curveSegments:24};
+  return [new THREE.ExtrudeGeometry(left,options),new THREE.ExtrudeGeometry(right,options)];
+ },[]);
+ return <group>{geometries.map((geometry,index)=><mesh key={index} geometry={geometry} rotation={[-Math.PI/2,0,0]} position={[0,1.12,-1.1]} castShadow receiveShadow><meshStandardMaterial color="#5f9257" roughness={1}/></mesh>)}</group>
+}
+
 function BasinSlopes(){
  const geometry=useMemo(()=>{
   const contour=new THREE.Shape();
@@ -95,6 +114,7 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[13,1.3,12]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
+   <ValleyShoulders/>
    {/* Cobertura verde do terreno a jusante, do pe da barragem ate a borda. */}
    <mesh position={[0,.012,3.8]} rotation={[-Math.PI/2,0,0]} receiveShadow><planeGeometry args={[13,4.4]}/><meshStandardMaterial color="#78a86f" roughness={1} side={THREE.DoubleSide}/></mesh>
    <BasinSlopes/>
@@ -119,7 +139,7 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    </>}
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
-   {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.012:1.12,z]} scale={.8+(i%3)*.14}/>)}
+   {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.012:1.7,z]} scale={.8+(i%3)*.14}/>)}
   </group>
 }
 
