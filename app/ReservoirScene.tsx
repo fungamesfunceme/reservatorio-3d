@@ -91,9 +91,10 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
-   {/* Barragem de concreto encostada nas paredes externas do vertedouro. */}
-   <mesh position={[-1.28,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[5.54,1.35,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
-   <mesh position={[3.18,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[1.74,1.35,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
+   {/* Barragem de concreto apoiada no solo e unida sob o vertedouro. */}
+   <mesh position={[-1.28,.8625,1.45]} castShadow receiveShadow><boxGeometry args={[5.54,1.725,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
+   <mesh position={[3.18,.8625,1.45]} castShadow receiveShadow><boxGeometry args={[1.74,1.725,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
+   <mesh position={[1.9,.5375,1.45]} castShadow receiveShadow><boxGeometry args={[.82,1.075,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
    <mesh position={[-1.3175,1.77,1.45]} castShadow><boxGeometry args={[5.615,.16,.9]}/><meshStandardMaterial color="#c5c9c7" roughness={.82}/></mesh>
    <mesh position={[3.2175,1.77,1.45]} castShadow><boxGeometry args={[1.815,.16,.9]}/><meshStandardMaterial color="#c5c9c7" roughness={.82}/></mesh>
    <mesh position={[-.8,.62,1.45]} rotation={[Math.PI/2,0,0]} castShadow><cylinderGeometry args={[.2,.2,1.2,20]}/><meshStandardMaterial color="#777c78" metalness={.35} roughness={.55}/></mesh>
