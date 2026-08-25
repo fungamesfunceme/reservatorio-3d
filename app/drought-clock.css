@@ -1,0 +1,144 @@
+.drought-clock h2 {
+  margin: 3px 0 8px;
+  font-size: 19px;
+}
+
+.clock-face {
+  position: relative;
+  height: 122px;
+  overflow: hidden;
+}
+
+.clock-arc,
+.clock-inner {
+  position: absolute;
+  left: 50%;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.clock-arc {
+  top: 8px;
+  width: 200px;
+  height: 200px;
+  background: conic-gradient(
+    from 270deg,
+    #2ea7df 0 var(--normal-end),
+    #f6d74b var(--normal-end) var(--alert-end),
+    #f3a13b var(--alert-end) var(--dry-end),
+    #e85b4f var(--dry-end) 50%,
+    transparent 50% 100%
+  );
+  box-shadow: inset 0 0 0 1px #17202a55;
+}
+
+.clock-inner {
+  z-index: 2;
+  top: 43px;
+  width: 130px;
+  height: 130px;
+  border: 1px solid #d8d2c8;
+  background: #fffdf9;
+  box-shadow: 0 -5px 14px #17202a10;
+}
+
+.clock-threshold {
+  position: absolute;
+  z-index: 3;
+  top: 107px;
+  left: 50%;
+  width: 96px;
+  height: 2px;
+  transform: rotate(var(--threshold-angle));
+  transform-origin: 0 50%;
+  background: linear-gradient(to right, transparent 0 87%, #17202a 87% 100%);
+}
+
+.clock-hand {
+  position: absolute;
+  z-index: 5;
+  top: 105px;
+  left: 50%;
+  width: 78px;
+  height: 6px;
+  border-radius: 999px;
+  background: #17202a;
+  box-shadow: 0 2px 4px #17202a38;
+  transform: rotate(var(--hand-angle));
+  transform-origin: 0 50%;
+  transition: transform 0.25s ease-out;
+}
+
+.clock-hub {
+  position: absolute;
+  z-index: 6;
+  top: 98px;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 5px solid #fffdf9;
+  border-radius: 50%;
+  background: #17202a;
+  box-shadow: 0 2px 6px #17202a42;
+  transform: translateX(-50%);
+}
+
+.clock-value {
+  position: absolute;
+  z-index: 4;
+  top: 61px;
+  left: 50%;
+  width: 96px;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.clock-value strong,
+.clock-value span {
+  display: block;
+}
+
+.clock-value strong {
+  color: var(--state);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.clock-value span {
+  margin-top: 4px;
+  color: #59656e;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.clock-scale {
+  position: absolute;
+  z-index: 7;
+  top: 106px;
+  color: #66717a;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.clock-scale-max {
+  left: 0;
+}
+
+.clock-scale-min {
+  right: 0;
+}
+
+.clock-caption {
+  margin: -2px 0 0;
+  color: #737b82;
+  font-size: 9px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.legend-divider {
+  height: 1px;
+  margin: 18px 0;
+  background: #ded8cf;
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './reservoir.css';
+import './drought-clock.css';
 
 const shareTitle = 'Reservatório 3D - Relógio da Seca de Hidrossistema';
 const shareDescription = 'Explore os estados de seca de um reservatório em um modelo 3D interativo.';
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: shareTitle,
     description: shareDescription,
-    images: [{ url: '/reservatorio-3d/reservatorio-og.png', width: 1200, height: 630, alt: 'Modelo tridimensional de um reservatório e sua barragem' }],
+    images: [{ url: 'https://fungamesfunceme.github.io/reservatorio-3d/reservatorio-og.png', width: 1200, height: 630, alt: 'Modelo tridimensional de um reservatório e sua barragem' }],
     locale: 'pt_BR',
     type: 'website',
   },
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: shareTitle,
     description: shareDescription,
-    images: ['/reservatorio-3d/reservatorio-og.png'],
+    images: ['https://fungamesfunceme.github.io/reservatorio-3d/reservatorio-og.png'],
   },
 };
 

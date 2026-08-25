@@ -4,6 +4,33 @@ import ReservoirScene from './ReservoirScene';
 const MONTHS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const VM1=[30,28,26,26,28,28,44,42,40,37,35,32], VM2=[23,22,20,20,22,22,36,34,32,30,27,25], VM3=[12,11,10,10,12,12,22,21,19,18,16,14];
 const states={normal:{label:'Normal',color:'#2ea7df',capacity:'700 L/s'},alerta:{label:'Alerta',color:'#f6d74b',capacity:'511 L/s'},seca:{label:'Seca',color:'#f3a13b',capacity:'224 L/s'},severa:{label:'Seca Severa',color:'#e85b4f',capacity:'140 L/s'}};
+
+function DroughtClock({volume,month,stateKey}:{volume:number;month:number;stateKey:keyof typeof states}){
+ const thresholds=[VM1[month],VM2[month],VM3[month]];
+ const clockStyle={
+  '--normal-end':`${(100-VM1[month])/2}%`,
+  '--alert-end':`${(100-VM2[month])/2}%`,
+  '--dry-end':`${(100-VM3[month])/2}%`,
+  '--hand-angle':`${-volume*1.8}deg`,
+  '--state':states[stateKey].color,
+ } as React.CSSProperties;
+ return <section className="drought-clock" style={clockStyle} aria-labelledby="clock-title">
+  <p className="eyebrow">ABASTECIMENTO URBANO</p>
+  <h2 id="clock-title">Relógio da Seca</h2>
+  <div className="clock-face" role="img" aria-label={`Relógio da Seca em ${volume}%, estado ${states[stateKey].label}, para ${MONTHS[month]}`}>
+   <div className="clock-arc"/>
+   <div className="clock-inner"/>
+   {thresholds.map((threshold,index)=><span className="clock-threshold" key={index} style={{'--threshold-angle':`${-threshold*1.8}deg`} as React.CSSProperties}/>) }
+   <div className="clock-value"><strong>{volume}%</strong><span>{states[stateKey].label}</span></div>
+   <div className="clock-hand"/>
+   <div className="clock-hub"/>
+   <span className="clock-scale clock-scale-max">100%</span>
+   <span className="clock-scale clock-scale-min">0%</span>
+  </div>
+  <p className="clock-caption">Níveis-meta de {MONTHS[month]}: {VM1[month]}% · {VM2[month]}% · {VM3[month]}%</p>
+ </section>
+}
+
 export default function Home(){
  const [volume,setVolume]=useState(44),[month,setMonth]=useState(6);
  const [simulationMode,setSimulationMode]=useState<'fill'|'drain'>('fill');
@@ -46,7 +73,7 @@ export default function Home(){
     <div className="webgl-scene"><ReservoirScene level={volume} color={current.color} releasing={stateKey!=='severa'}/></div>
     <div className="interaction-hint">Arraste para girar · Scroll para zoom</div>
    </div>
-   <aside className="legend-panel"><p className="eyebrow">LEITURA DO MODELO</p><h2>Zonas do reservatório</h2>{(Object.keys(states) as Array<keyof typeof states>).map(key=><div className={`legend-item ${key===stateKey?'active':''}`} key={key}><span style={{background:states[key].color}}/><div><strong>{states[key].label}</strong><small>{states[key].capacity}</small></div></div>)}<div className="reading-note">Em <strong>{MONTHS[month]}</strong>, {volume}% está {volume>VM1[month]?'acima do VM1':volume>VM2[month]?'entre VM1 e VM2':volume>VM3[month]?'entre VM2 e VM3':'abaixo do VM3'}.</div><p className="disclaimer">A simulação comunica os gatilhos do Relógio da Seca. A operação efetiva permanece vinculada à alocação negociada.</p></aside>
+   <aside className="legend-panel"><DroughtClock volume={volume} month={month} stateKey={stateKey}/><div className="legend-divider"/><p className="eyebrow">LEITURA DO MODELO</p><h2>Zonas do reservatório</h2>{(Object.keys(states) as Array<keyof typeof states>).map(key=><div className={`legend-item ${key===stateKey?'active':''}`} key={key}><span style={{background:states[key].color}}/><div><strong>{states[key].label}</strong><small>{states[key].capacity}</small></div></div>)}<div className="reading-note">Em <strong>{MONTHS[month]}</strong>, {volume}% está {volume>VM1[month]?'acima do VM1':volume>VM2[month]?'entre VM1 e VM2':volume>VM3[month]?'entre VM2 e VM3':'abaixo do VM3'}.</div><p className="disclaimer">A simulação comunica os gatilhos do Relógio da Seca. A operação efetiva permanece vinculada à alocação negociada.</p></aside>
   </section>
  </main>
 }
