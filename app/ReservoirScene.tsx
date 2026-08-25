@@ -58,11 +58,7 @@ function ValleyTerrain(){
   outer.lineTo(2.28,-1.32);
   outer.bezierCurveTo(2.8,-1.3,3.48,-1.38,3.9,-1.62);
   outer.bezierCurveTo(4.65,-1.8,5.18,-2.25,5.32,-2.7);
-  outer.lineTo(5.7,-2.7);
-  outer.bezierCurveTo(5.5,-1.75,5.86,-.65,5.58,.35);
-  outer.bezierCurveTo(5.34,1.35,5.82,2.35,5.55,3.25);
-  outer.bezierCurveTo(5.42,3.72,5.68,4.15,5.5,4.45);
-  outer.lineTo(-5.7,4.45);outer.closePath();
+  outer.lineTo(5.7,-2.7);outer.lineTo(5.7,4.45);outer.lineTo(-5.7,4.45);outer.closePath();
   const hole=new THREE.Path();
   hole.moveTo(-2.78,-2.3);hole.bezierCurveTo(-3.02,-1.3,-2.35,-.58,-2.86,.18);hole.bezierCurveTo(-3.28,.94,-2.5,1.62,-2.67,2.28);hole.bezierCurveTo(-2.82,3.08,-1.58,3.66,-.58,3.98);hole.bezierCurveTo(.48,4.28,1.47,3.82,1.62,3.24);hole.bezierCurveTo(1.82,2.66,2.92,2.52,2.66,1.68);hole.bezierCurveTo(2.43,.94,3.18,.35,2.8,-.42);hole.bezierCurveTo(2.52,-1.08,3.02,-1.68,2.79,-2.3);hole.lineTo(-2.78,-2.3);hole.closePath();
   outer.holes.push(hole);
@@ -94,8 +90,7 @@ function DownstreamTerrain(){
   s.moveTo(-5.8,-1.5);
   s.bezierCurveTo(-3.55,-1.64,-1.45,-1.5,.25,-1.6);
   s.bezierCurveTo(2.15,-1.72,4.15,-1.54,5.8,-1.62);
-  s.bezierCurveTo(5.55,-2.4,5.92,-3.15,5.66,-3.92);
-  s.bezierCurveTo(5.45,-4.55,5.86,-5.18,5.62,-5.72);
+  s.lineTo(5.8,-5.72);
   s.bezierCurveTo(3.65,-5.86,1.45,-5.72,-.45,-5.8);
   s.bezierCurveTo(-2.7,-5.88,-4.65,-5.74,-5.8,-5.66);
   s.closePath();
