@@ -75,7 +75,14 @@ function BasinSlopes(){
 
 function ReleasedRiver({level}:{level:number}){
  const geometry=useMemo(()=>{
-  const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(-.8,.5,1.92),new THREE.Vector3(-.35,.49,2.65),new THREE.Vector3(.45,.47,3.25),new THREE.Vector3(-.18,.45,4.15),new THREE.Vector3(.18,.43,5.7)]);
+  const curve=new THREE.CatmullRomCurve3([
+   new THREE.Vector3(-.8,.62,1.98),
+   new THREE.Vector3(-.72,.28,2.3),
+   new THREE.Vector3(-.35,.06,2.65),
+   new THREE.Vector3(.45,.027,3.3),
+   new THREE.Vector3(-.18,.023,4.1),
+   new THREE.Vector3(.18,.02,4.9),
+  ],false,'centripetal');
   const points=curve.getPoints(52),positions:number[]=[],uvs:number[]=[],indices:number[]=[];
   const base=.09+level*.0022;
   points.forEach((point,i)=>{const tangent=curve.getTangent(i/(points.length-1));const side=new THREE.Vector3(-tangent.z,0,tangent.x).normalize();const width=base*(.65+i/(points.length-1)*.7);const left=point.clone().addScaledVector(side,width),right=point.clone().addScaledVector(side,-width);positions.push(left.x,left.y,left.z,right.x,right.y,right.z);uvs.push(0,i/(points.length-1),1,i/(points.length-1));if(i<points.length-1){const a=i*2,b=a+1,c=a+2,d=a+3;indices.push(a,c,b,c,d,b)}});
@@ -88,6 +95,8 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
  return <group rotation={[0,-.12,0]}>
    <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[12,1.3,10]}/><meshStandardMaterial color="#9a7a48" roughness={1}/></mesh>
    <ValleyTerrain/>
+   {/* Cobertura verde do terreno a jusante, do pe da barragem ate a borda. */}
+   <mesh position={[0,.012,3.3]} rotation={[-Math.PI/2,0,0]} receiveShadow><planeGeometry args={[12,3.4]}/><meshStandardMaterial color="#78a86f" roughness={1} side={THREE.DoubleSide}/></mesh>
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
@@ -110,7 +119,7 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    </>}
    <mesh position={[-.8,1.45,.75]} castShadow><cylinderGeometry args={[.28,.38,1.35,16]}/><meshStandardMaterial color="#d8d3c5"/></mesh>
    <mesh position={[-.8,2.15,.75]} castShadow><cylinderGeometry args={[.42,.42,.18,16]}/><meshStandardMaterial color="#696b66"/></mesh>
-   {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.02:1.12,z]} scale={.8+(i%3)*.14}/>)}
+   {[[-5,-3.4],[-4.6,2.9],[-3.6,-4],[3.8,-3.8],[5,-1.5],[4.9,3.5],[-4.5,4]].map(([x,z],i)=><Tree key={i} position={[x,z>1.6?.012:1.12,z]} scale={.8+(i%3)*.14}/>)}
   </group>
 }
 
