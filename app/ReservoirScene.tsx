@@ -91,11 +91,11 @@ function Model({level,color,releasing}:{level:number;color:string;releasing:bool
    <BasinSlopes/>
    <BasinFloor/>
    <Water level={level} color={color}/>
-   {/* Barragem dividida para deixar livre a passagem do vertedouro. */}
-   <mesh position={[-1.345,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[5.41,1.35,.9]}/><meshStandardMaterial color="#b66c2f" roughness={.85}/></mesh>
-   <mesh position={[3.245,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[1.61,1.35,.9]}/><meshStandardMaterial color="#b66c2f" roughness={.85}/></mesh>
-   <mesh position={[-1.3825,1.77,1.45]} castShadow><boxGeometry args={[5.485,.16,.9]}/><meshStandardMaterial color="#df9a52"/></mesh>
-   <mesh position={[3.2825,1.77,1.45]} castShadow><boxGeometry args={[1.685,.16,.9]}/><meshStandardMaterial color="#df9a52"/></mesh>
+   {/* Barragem de concreto encostada nas paredes externas do vertedouro. */}
+   <mesh position={[-1.28,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[5.54,1.35,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
+   <mesh position={[3.18,1.05,1.45]} castShadow receiveShadow><boxGeometry args={[1.74,1.35,.9]}/><meshStandardMaterial color="#a8adab" roughness={.9}/></mesh>
+   <mesh position={[-1.3175,1.77,1.45]} castShadow><boxGeometry args={[5.615,.16,.9]}/><meshStandardMaterial color="#c5c9c7" roughness={.82}/></mesh>
+   <mesh position={[3.2175,1.77,1.45]} castShadow><boxGeometry args={[1.815,.16,.9]}/><meshStandardMaterial color="#c5c9c7" roughness={.82}/></mesh>
    <mesh position={[-.8,.62,1.45]} rotation={[Math.PI/2,0,0]} castShadow><cylinderGeometry args={[.2,.2,1.2,20]}/><meshStandardMaterial color="#777c78" metalness={.35} roughness={.55}/></mesh>
    <mesh position={[-.8,.62,1.98]} rotation={[0,0,0]} castShadow><torusGeometry args={[.2,.055,10,24]}/><meshStandardMaterial color="#555b59" metalness={.45} roughness={.48}/></mesh>
    {releasing&&<mesh position={[-.8,.62,2.02]}><circleGeometry args={[.16,20]}/><meshStandardMaterial color="#30b2d0" side={THREE.DoubleSide}/></mesh>}
