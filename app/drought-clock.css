@@ -142,3 +142,172 @@
   margin: 18px 0;
   background: #ded8cf;
 }
+
+@media (max-width: 760px) {
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+  }
+
+  .scene-wrap {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    min-width: 0;
+    order: initial;
+  }
+
+  .control-panel,
+  .legend-panel {
+    grid-row: 2;
+    min-width: 0;
+    padding: 10px;
+    border-radius: 14px;
+    order: initial;
+  }
+
+  .control-panel {
+    grid-column: 1;
+  }
+
+  .legend-panel {
+    display: block;
+    grid-column: 2;
+  }
+
+  .panel-heading {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .panel-heading h2,
+  .legend-panel h2,
+  .drought-clock h2 {
+    font-size: 15px;
+  }
+
+  .tiny-cube {
+    width: 27px;
+    height: 27px;
+  }
+
+  .control-panel label {
+    gap: 6px;
+    font-size: 10px;
+  }
+
+  .control-panel button {
+    font-size: 10px;
+  }
+
+  .metric-grid {
+    gap: 4px;
+    margin: 14px 0;
+  }
+
+  .metric-grid div {
+    padding: 6px 3px;
+  }
+
+  .metric-grid strong {
+    font-size: 12px;
+  }
+
+  .state-card {
+    padding: 10px;
+    margin: 13px 0;
+  }
+
+  .state-card strong {
+    font-size: 16px;
+  }
+
+  .clock-face {
+    height: 72px;
+  }
+
+  .clock-arc {
+    top: 5px;
+    width: 116px;
+    height: 116px;
+  }
+
+  .clock-inner {
+    top: 25px;
+    width: 76px;
+    height: 76px;
+  }
+
+  .clock-threshold {
+    top: 62px;
+    width: 56px;
+    height: 2px;
+  }
+
+  .clock-hand {
+    top: 61px;
+    width: 46px;
+    height: 4px;
+  }
+
+  .clock-hub {
+    top: 57px;
+    width: 12px;
+    height: 12px;
+    border-width: 3px;
+  }
+
+  .clock-value {
+    top: 36px;
+    width: 64px;
+  }
+
+  .clock-value strong {
+    font-size: 16px;
+  }
+
+  .clock-value span {
+    margin-top: 2px;
+    font-size: 7px;
+  }
+
+  .clock-scale {
+    top: 61px;
+    font-size: 7px;
+  }
+
+  .clock-caption {
+    margin-top: 2px;
+    font-size: 8px;
+  }
+
+  .legend-divider {
+    margin: 12px 0;
+  }
+
+  .legend-item {
+    gap: 7px;
+    padding: 6px;
+    margin: 4px 0;
+  }
+
+  .legend-item > span {
+    width: 9px;
+    height: 29px;
+  }
+
+  .legend-item strong {
+    font-size: 10px;
+  }
+
+  .reading-note {
+    margin: 12px 0 9px;
+    padding: 9px;
+    font-size: 10px;
+  }
+
+  .disclaimer {
+    font-size: 9px;
+  }
+}
